@@ -154,7 +154,11 @@ exports.frogotPasswrod = async (req, res, next) => {
 
         await user.save();
 
-        const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+        let BASE_URL = process.env.CLIENT_URL;
+        if(process.env.NODE_ENV === "production"){
+            BASE_URL = `${req.protocol}://${req.get('host')}`
+        } 
+        const resetUrl = `${BASE_URL}/reset-password/${resetToken}`;
         // send email
         await sendpasswordResetEmail(user.email, resetUrl);
 
